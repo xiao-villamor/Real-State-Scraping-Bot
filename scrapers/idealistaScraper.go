@@ -1,6 +1,7 @@
 package scrapers
 
 import (
+	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/gocolly/colly"
 	m "piso-scrapper/models"
@@ -9,6 +10,8 @@ import (
 )
 
 func ScrapI(url string, bot *tgbotapi.BotAPI) {
+	fmt.Println(url)
+
 	var err error
 	iFactory, _ := apartmentService.GetApartmentFactory("idealista")
 

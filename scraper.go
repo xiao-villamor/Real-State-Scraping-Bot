@@ -1,14 +1,18 @@
 package main
 
 import (
+	"fmt"
 	_ "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
+	"github.com/spaceweasel/promptui"
 	"log"
 	"os"
 	"piso-scrapper/scrapers"
 	"time"
 )
+
+type fn func(string, *tgbotapi.BotAPI)
 
 func goDotEnvVariable(key string) string {
 
@@ -21,7 +25,21 @@ func goDotEnvVariable(key string) string {
 	return os.Getenv(key)
 }
 
+func runScraper(scraper []fn, url []string, bot *tgbotapi.BotAPI) {
+	for {
+		for exec := range scraper {
+			go scraper[exec](url[exec], bot)
+		}
+		time.Sleep(15 * time.Minute)
+	}
+
+}
+
 func main() {
+	var selected = true
+	var result []int
+	var fns []fn
+	var urls []string
 	botToken := goDotEnvVariable("TELEGRAM_BOT_TOKEN")
 	IdealistaURL := goDotEnvVariable("IDEALISTA_URL")
 	FotocasaURL := goDotEnvVariable("FOTOCASA_URL")
@@ -30,13 +48,38 @@ func main() {
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
-	if err != nil {
-		panic(err)
+	for selected {
+		prompt := promptui.MultiSelect{
+			Label: "Select Web To scrap",
+			Items: []string{"Idealista", "Fotocasa"},
+		}
+		result, err = prompt.Run()
+		if err != nil {
+			fmt.Printf("Prompt failed %v\n", err)
+			return
+		}
+		if len(result) != 0 {
+			selected = false
+			break
+		}
+		fmt.Println("Please Select at least one option")
 	}
-	for {
-		go scrapers.ScrapF(FotocasaURL, bot)
-		go scrapers.ScrapI(IdealistaURL, bot)
-		time.Sleep(15 * time.Minute)
+
+	if len(result) == 1 {
+		if result[0] == 1 {
+			fns = append(fns, scrapers.ScrapF)
+			urls = append(urls, FotocasaURL)
+		} else {
+			fns = append(fns, scrapers.ScrapI)
+			urls = append(urls, IdealistaURL)
+		}
+	} else {
+		fns = append(fns, scrapers.ScrapF)
+		fns = append(fns, scrapers.ScrapI)
+		urls = append(urls, FotocasaURL)
+		urls = append(urls, IdealistaURL)
+
 	}
+	runScraper(fns, urls, bot)
 
 }

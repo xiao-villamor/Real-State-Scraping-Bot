@@ -14,6 +14,8 @@ import (
 
 func ScrapF(url string, bot *tgbotapi.BotAPI) {
 
+	fmt.Println("starting scrapper")
+
 	var err error
 	var resp *http.Response
 	iFactory, _ := apartmentService.GetApartmentFactory("fotocasa")
