@@ -1,4 +1,4 @@
-package main
+package scraper
 
 import (
 	"encoding/json"
@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func scrapF(url string, bot *tgbotapi.BotAPI) {
+func ScrapF(url string, bot *tgbotapi.BotAPI) {
 
 	var err error
 	var resp *http.Response
@@ -53,7 +53,7 @@ func scrapF(url string, bot *tgbotapi.BotAPI) {
 		}
 		if iFactory.FindCoincidences(a) {
 			time.Sleep(100 * time.Millisecond)
-			sendMessage(a, bot)
+			SendMessage(a, bot)
 			iFactory.Create(a)
 			time.Sleep(4 * time.Second)
 

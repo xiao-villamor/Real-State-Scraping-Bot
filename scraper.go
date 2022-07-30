@@ -6,23 +6,9 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"os"
-	m "piso-scrapper/models"
+	"piso-scrapper/scraper"
 	"time"
 )
-
-func sendMessage(apartment m.Apartment, bot *tgbotapi.BotAPI) {
-	msg := tgbotapi.NewMessage(-704301832, "")
-	msg.ParseMode = "html"
-
-	msg.Text = "<b>NARCOPISO DETECTED</b>\n" +
-		"<b>Dirección: </b>" + apartment.Direction + "\n" + "<b>Precio: </b>" + apartment.Price + " €\n" +
-		"<a href=\"" + apartment.Url + "\">enlace</a>"
-
-	if _, err := bot.Send(msg); err != nil {
-		log.Panic(err)
-	}
-
-}
 
 func goDotEnvVariable(key string) string {
 
@@ -48,8 +34,8 @@ func main() {
 		panic(err)
 	}
 	for {
-		go scrapF(FotocasaURL, bot)
-		go scrapI(IdealistaURL, bot)
+		go scraper.ScrapF(FotocasaURL, bot)
+		go scraper.ScrapI(IdealistaURL, bot)
 		time.Sleep(15 * time.Minute)
 	}
 

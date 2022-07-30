@@ -1,4 +1,4 @@
-package main
+package scraper
 
 import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func scrapI(url string, bot *tgbotapi.BotAPI) {
+func ScrapI(url string, bot *tgbotapi.BotAPI) {
 	var err error
 	iFactory, _ := apartmentService.GetApartmentFactory("idealista")
 
@@ -39,7 +39,8 @@ func scrapI(url string, bot *tgbotapi.BotAPI) {
 
 			if iFactory.FindCoincidences(a) {
 				time.Sleep(100 * time.Millisecond)
-				sendMessage(a, bot)
+				SendMessage(a, bot)
+
 				iFactory.Create(a)
 				time.Sleep(4 * time.Second)
 			}
