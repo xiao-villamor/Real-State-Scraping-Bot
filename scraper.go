@@ -6,7 +6,7 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"os"
-	"piso-scrapper/scraper"
+	"piso-scrapper/scrapers"
 	"time"
 )
 
@@ -34,8 +34,8 @@ func main() {
 		panic(err)
 	}
 	for {
-		go scraper.ScrapF(FotocasaURL, bot)
-		go scraper.ScrapI(IdealistaURL, bot)
+		go scrapers.ScrapF(FotocasaURL, bot)
+		go scrapers.ScrapI(IdealistaURL, bot)
 		time.Sleep(15 * time.Minute)
 	}
 
