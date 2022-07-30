@@ -45,6 +45,9 @@ func main() {
 	FotocasaURL := goDotEnvVariable("FOTOCASA_URL")
 
 	bot, err := tgbotapi.NewBotAPI(botToken)
+	if err != nil {
+		log.Fatal("An error occurs")
+	}
 
 	log.Printf("Authorized on account %s", bot.Self.UserName)
 
@@ -68,18 +71,28 @@ func main() {
 	if len(result) == 1 {
 		if result[0] == 1 {
 			fns = append(fns, scrapers.ScrapF)
+			if FotocasaURL == "" {
+				log.Fatal("Introduce a valid URL")
+			}
 			urls = append(urls, FotocasaURL)
 		} else {
 			fns = append(fns, scrapers.ScrapI)
+			if IdealistaURL == "" {
+				log.Fatal("Introduce a valid URL")
+			}
 			urls = append(urls, IdealistaURL)
 		}
 	} else {
 		fns = append(fns, scrapers.ScrapF)
 		fns = append(fns, scrapers.ScrapI)
+		if IdealistaURL == "" || FotocasaURL == "" {
+			log.Fatal("Introduce a valid URL")
+		}
 		urls = append(urls, FotocasaURL)
 		urls = append(urls, IdealistaURL)
 
 	}
+
 	runScraper(fns, urls, bot)
 
 }
