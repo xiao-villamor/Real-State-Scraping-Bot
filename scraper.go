@@ -43,6 +43,7 @@ func main() {
 	botToken := goDotEnvVariable("TELEGRAM_BOT_TOKEN")
 	IdealistaURL := goDotEnvVariable("IDEALISTA_URL")
 	FotocasaURL := goDotEnvVariable("FOTOCASA_URL")
+	ChatId :=goDotEnvVariable("CHAT_ID")
 
 	bot, err := tgbotapi.NewBotAPI(botToken)
 	if err != nil {
