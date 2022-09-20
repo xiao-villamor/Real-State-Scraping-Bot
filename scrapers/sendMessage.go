@@ -6,8 +6,8 @@ import (
 	m "piso-scrapper/models"
 )
 
-func SendMessage(apartment m.Apartment, bot *tgbotapi.BotAPI) {
-	msg := tgbotapi.NewMessage(-704301832, "")
+func SendMessage(apartment m.Apartment, bot *tgbotapi.BotAPI,chat_id int) {
+	msg := tgbotapi.NewMessage(chat_id, "")
 	msg.ParseMode = "html"
 
 	msg.Text = "<b>NEW</b>\n" +
